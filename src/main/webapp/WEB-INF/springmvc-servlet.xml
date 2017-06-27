@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+       http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+	<!-- Spring MVC注解开发 -->
+	<mvc:annotation-driven />
+	<!-- 扫描controller -->
+	<context:component-scan base-package="proj.platform.controller" />
+	<!-- 配置上传文件大小 -->
+	<!-- 文件上传 -->
+	<bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<!-- 设置上传文件的最大尺寸为5MB -->
+		<property name="maxUploadSize">
+			<value>5242880</value>
+		</property>
+	</bean>
+	<!-- 静态资源，防止DispatcherServlet拦截 -->
+	<mvc:resources location="/static/" mapping="/static/**" />
+	<mvc:resources location="/" mapping="*.html" />
+	<!-- shiro注解开发 -->
+	<!-- CGLIB代理 -->
+<!-- 	<aop:config proxy-target-class="true" />
+	<bean
+		class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
+		<property name="securityManager" ref="securityManager" />
+	</bean> -->
+	<!-- 配置验证码配置 -->
+	<bean id="captchaProducer" class="com.google.code.kaptcha.impl.DefaultKaptcha">
+		<property name="config">
+			<bean class="com.google.code.kaptcha.util.Config">
+				<constructor-arg>
+					<props>
+						<!-- 图片边框 -->
+						<prop key="kaptcha.border">no</prop>
+						<!-- 图片宽度 -->
+						<prop key="kaptcha.image.width">95</prop>
+						<!-- 图片高度 -->
+						<prop key="kaptcha.image.height">45</prop>
+						<!-- 验证码背景颜色渐变，开始颜色 -->
+						<prop key="kaptcha.background.clear.from">248,248,248</prop>
+						<!-- 验证码背景颜色渐变，结束颜色 -->
+						<prop key="kaptcha.background.clear.to">248,248,248</prop>
+						<!-- 验证码的字符 -->
+						<prop key="kaptcha.textproducer.char.string">0123456789abcdefghijklmnopqrstuvwxyz</prop>
+						<!-- 验证码字体颜色 -->
+						<prop key="kaptcha.textproducer.font.color">0,0,255</prop>
+						<!-- 验证码的效果，水纹 -->
+						<prop key="kaptcha.obscurificator.impl">com.google.code.kaptcha.impl.WaterRipple</prop>
+						<!-- 验证码字体大小 -->
+						<prop key="kaptcha.textproducer.font.size">35</prop>
+						<!-- 验证码字数 -->
+						<prop key="kaptcha.textproducer.char.length">4</prop>
+						<!-- 验证码文字间距 -->
+						<prop key="kaptcha.textproducer.char.space">2</prop>
+						<!-- 验证码字体 -->
+						<prop key="kaptcha.textproducer.font.names">new Font("Arial", 1, fontSize), new Font("Courier",
+							1, fontSize)</prop>
+						<!-- 不加噪声 -->
+						<prop key="kaptcha.noise.impl">com.google.code.kaptcha.impl.NoNoise</prop>
+					</props>
+				</constructor-arg>
+			</bean>
+		</property>
+	</bean>
+</beans>

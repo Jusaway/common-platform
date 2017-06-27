@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+          http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+          http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+          http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+	<!-- 配置权限管理器 -->
+	<bean id="myRealm" class="proj.web.oa.service.MyRealm">
+		<property name="cachingEnabled" value="true" />
+		<property name="authenticationCachingEnabled" value="true" />
+		<property name="authenticationCacheName" value="authenticationCache" />
+		<property name="authorizationCachingEnabled" value="true" />
+		<property name="authorizationCacheName" value="authorizationCache" />
+	</bean>
+	<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+		<!-- 我们自定义的realm -->
+		<property name="realm" ref="myRealm" />
+		<!-- 缓存管理器 -->
+		<property name="cacheManager" ref="cacheManager" />
+	</bean>
+
+	<bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+		<!-- 权限管理器 -->
+		<property name="securityManager" ref="securityManager" />
+		<!-- 登录地址 -->
+		<property name="loginUrl" value="login.html" />
+		<!-- 登录后跳转到业务页面 -->
+		<property name="successUrl" value="index.html" />
+		<!-- 错误页面 -->
+		<property name="unauthorizedUrl" value="403.html" />
+		<!-- 权限配置 -->
+		<property name="filterChainDefinitions">
+			<value>
+				/login.html	= anon
+				/user/login.do = anon
+				/static/** = anon
+				/captcha/** = anon
+				/file/** = anon
+				/** = authc
+			</value>
+		</property>
+	</bean>
+
+	<!-- 缓存管理器 -->
+	<bean id="cacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">
+		<property name="cacheManagerConfigFile" value="classpath:ehcache-shiro.xml" />
+	</bean>
+	<!-- 生命周期管理器 -->
+    <bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor"/>
+</beans>
