@@ -49,4 +49,8 @@
 		<servlet-name>springmvc</servlet-name>
 		<url-pattern>/</url-pattern>
 	</servlet-mapping>
+	<!-- 设置超时时间为10分钟 -->
+	<session-config>
+		<session-timeout>10</session-timeout>
+	</session-config>
 </web-app>

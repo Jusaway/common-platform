@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Insert title here</title>
+	<script src="static/js/jquery-3.2.1.min.js"></script>
+</head>
+<body>
+	<div>
+		<div>
+			<label>用户</label>
+			<input type="text" name="userName" id="userName" />	
+		</div>
+		<div>
+			<label>密码</label>
+			<input type="password" name="password" id="password" />
+		</div>
+		<div>
+			<button id="submit">登录</button>
+		</div>
+	</div>
+	<script>
+		$(function(){
+			$('#submit').click(function(){
+				var userName = $('#userName').val();
+				var password = $('#password').val();
+				$.post('userInfo/login.do','userName='+userName+'&password='+password,function(data){
+					if(data.stateCode == 0){
+						location.href = "index.html";
+					}
+				});
+			});
+		});
+	</script>
+</body>
+</html>

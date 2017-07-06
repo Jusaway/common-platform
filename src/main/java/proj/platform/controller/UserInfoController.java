@@ -1,5 +1,6 @@
 package proj.platform.controller;
 
+import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.Resource;
@@ -36,22 +37,17 @@ public class UserInfoController {
 			UserInfo userInfo){
 		result = new Result();
 		ServletContext application = request.getServletContext(); 
-		Set<String> loginSet = (Set<String>) application.getAttribute("loginSet");//已经通过监听器创建
+		Map<String, HttpSession> loginMap = (Map<String, HttpSession>) application.getAttribute("loginMap");
 		boolean isCorrect = userInfoService.login(userInfo);
-		boolean isLogin = loginSet.contains(userInfo.getUserName());
-		if(isCorrect && !isLogin){
+		if(isCorrect){
 			result.setStateCode(State.SUCCESS_CODE);
 			result.setDebugMsg("登录成功！");
-			loginSet.add(userInfo.getUserName());
-			application.setAttribute("loginSet", loginSet);
-			result.setLoginSet(loginSet);
-		}else if(!isCorrect){
+			HttpSession session = request.getSession();
+			session.setAttribute("userName", userInfo.getUserName());
+			loginMap.put(userInfo.getUserName(), session);
+		}else{
 			result.setStateCode(State.ERROR_CODE);
 			result.setDebugMsg("用户名或密码错误！");
-		}else if(isLogin){
-			result.setStateCode(State.ERROR_CODE);
-			result.setDebugMsg("当前用户已登录！");
-			result.setLoginSet(loginSet);
 		}
 		DataUtil.reply(response, result);
 	}

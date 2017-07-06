@@ -31,6 +31,16 @@
 		class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
 		<property name="securityManager" ref="securityManager" />
 	</bean> -->
+	<!-- Spring MVC拦截器 -->
+	<mvc:interceptors>
+		<!-- 针对所有拦截 -->
+		<mvc:interceptor>
+			<mvc:mapping path="/**"/>
+			<mvc:exclude-mapping path="/static/**"/>
+			<mvc:exclude-mapping path="/userInfo/login.do"/>
+			<bean class="proj.platform.interceptor.StateInterceptor" />
+		</mvc:interceptor>
+	</mvc:interceptors>
 	<!-- 配置验证码配置 -->
 	<bean id="captchaProducer" class="com.google.code.kaptcha.impl.DefaultKaptcha">
 		<property name="config">
