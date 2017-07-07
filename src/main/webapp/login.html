@@ -16,17 +16,27 @@
 			<input type="password" name="password" id="password" />
 		</div>
 		<div>
-			<button id="submit">登录</button>
+			<button id="submit_html">登录(html)</button>
+			<button id="submit_jsp">登录(jsp)</button>
 		</div>
 	</div>
 	<script>
 		$(function(){
-			$('#submit').click(function(){
+			$('#submit_html').click(function(){
 				var userName = $('#userName').val();
 				var password = $('#password').val();
 				$.post('userInfo/login.do','userName='+userName+'&password='+password,function(data){
 					if(data.stateCode == 0){
 						location.href = "index.html";
+					}
+				});
+			});
+			$('#submit_jsp').click(function(){
+				var userName = $('#userName').val();
+				var password = $('#password').val();
+				$.post('userInfo/login.do','userName='+userName+'&password='+password,function(data){
+					if(data.stateCode == 0){
+						location.href = "index.jsp";
 					}
 				});
 			});

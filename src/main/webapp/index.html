@@ -1,10 +1,27 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
+	<meta charset="UTF-8">
+	<title>Insert title here</title>
+	<script src="static/js/jquery-3.2.1.min.js"></script>
 </head>
 <body>
-	<h1>你好</h1>
+	<h2>当前登录的用户列表</h2>
+	<div id="myList"></div>
+	<script>
+		$(function(){
+			$.get("userInfo/getOnlineUsers.do",function(data){
+				var list = data.userLoginTimes;
+				for(var i=0;i<list.length;i++){
+					var row = $('<div></div>');
+					var userName = $('<span>'+list[i].userName+'</span>');
+					var sep = $('<span>-------</span>');
+					var loginTime = $('<span>'+list[i].loginTime+'</span>');
+					row.append(userName,sep,loginTime);
+					$('#myList').append(row);
+				}
+			});
+		})
+	</script>
 </body>
 </html>

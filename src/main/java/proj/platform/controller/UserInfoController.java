@@ -1,8 +1,7 @@
 package proj.platform.controller;
 
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
-
 import javax.annotation.Resource;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -14,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import proj.platform.entity.Result;
 import proj.platform.entity.UserInfo;
+import proj.platform.entity.UserLoginTime;
 import proj.platform.service.UserInfoService;
 import proj.platform.util.DataUtil;
 import proj.platform.util.State;
@@ -44,6 +44,7 @@ public class UserInfoController {
 			result.setDebugMsg("登录成功！");
 			HttpSession session = request.getSession();
 			session.setAttribute("userName", userInfo.getUserName());
+			session.setAttribute("loginTime", DataUtil.getCurrentDate("yyyy-MM-dd hh:mm:ss"));
 			loginMap.put(userInfo.getUserName(), session);
 		}else{
 			result.setStateCode(State.ERROR_CODE);
@@ -74,13 +75,21 @@ public class UserInfoController {
 			HttpServletResponse response,
 			String userName){
 		ServletContext application = request.getServletContext();
-		Set<String> loginSet = (Set<String>) application.getAttribute("loginSet");
-		loginSet.remove(userName);
+		Map<String, HttpSession> loginMap = (Map<String, HttpSession>) application.getAttribute("loginMap");
+		loginMap.remove(userName);
 		HttpSession session = request.getSession();
 		session.invalidate();
 		result = new Result();
 		result.setStateCode(State.SUCCESS_CODE);
 		result.setDebugMsg("注销成功！");
+		DataUtil.reply(response, result);
+	}
+	@RequestMapping("/getOnlineUsers.do")
+	public void getOnlineUsers(HttpServletRequest request,
+			HttpServletResponse response){
+		List<UserLoginTime> userLoginTimes = userInfoService.getOnlineUsers(request);
+		result = new Result();
+		result.setUserLoginTimes(userLoginTimes);
 		DataUtil.reply(response, result);
 	}
 }
