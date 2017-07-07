@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>测试表单提交</title>
+	<script src="static/js/jquery-3.2.1.min.js"></script>
+</head>
+<body>
+	<div>
+		<h2>通过表单提交</h2>
+		<form action="userInfo/login.do" method="post">
+			<div>
+				<label>用户名</label> <input type="text" name="userName" id="userName" />
+			</div>
+			<div>
+				<label>密码</label> <input type="password" name="password"
+					id="password" />
+			</div>
+			<div>
+				<button>登录</button>
+			</div>
+		</form>
+	</div>
+	<div>
+		<h2>AJAX请求:content-type:application/x-www-urlencoded</h2>
+		<div>
+			<label>用户名</label> <input type="text" name="userName2" id="userName2" />
+		</div>
+		<div>
+			<label>密码</label> <input type="password" name="password2"
+				id="password2" />
+		</div>
+		<div>
+			<label for="checkbox2">使用jQuery</label>
+			<input type="checkbox" id="checkbox2" />
+			<button id="submit2">登录</button>
+		</div>
+	</div>
+	<div>
+		<h2>AJAX请求:content-type:multipart/form-data</h2>
+		<div>
+			<label>用户名</label> <input type="text" name="userName3" id="userName3" />
+		</div>
+		<div>
+			<label>密码</label> <input type="password" name="password3"
+				id="password3" />
+		</div>
+		<div>
+			<label for="checkbox3">使用jQuery</label>
+			<input type="checkbox" id="checkbox3" />
+			<button id="submit3">登录</button>
+		</div>
+	</div>
+	<div>
+		<h2>AJAX请求:content-type:application/json</h2>
+		<div>
+			<label>用户名</label> <input type="text" name="userName4" id="userName4" />
+		</div>
+		<div>
+			<label>密码</label> <input type="password" name="password4"
+				id="password4" />
+		</div>
+		<div>
+			<label for="checkbox4">使用jQuery</label>
+			<input type="checkbox" id="checkbox4" />
+			<button id="submit4">登录</button>
+		</div>
+	</div>
+	<script>
+		$(function() {
+			$('#submit2').click(function() {
+				if(!$('#checkbox2').prop('checked')){
+					var xhr = new XMLHttpRequest();
+					xhr.open('post', 'userInfo/login.do');
+					xhr.setRequestHeader('Content-Type','application/x-www-form-urlencoded'); 
+					xhr.send('userName='+$('#userName2').val()+'&password='+$('#password2').val());
+				}else{
+					//默认的Content-Type为application/x-www-form-urlencoded
+					$.post('userInfo/login.do','userName='+$('#userName2').val()+'&password='+$('#password2').val());
+				}
+			});
+			$('#submit3').click(function() {
+				if(!$('#checkbox3').prop('checked')){
+					var formData = new FormData();
+					formData.append('userName',$('#userName3').val());
+					formData.append('password',$('#password3').val());
+					var xhr = new XMLHttpRequest();
+					xhr.open('post', 'userInfo/login.do');
+					xhr.send(formData);
+				}else{
+					var formData = new FormData();
+					formData.append('userName',$('#userName3').val());
+					formData.append('password',$('#password3').val());
+					$.ajax({
+						type:'post',
+						url:'userInfo/login.do',
+						data:formData,
+						contentType:false,
+						processData:false
+					});
+				}
+			});
+			$('#submit4').click(function() {
+				if(!$('#checkbox4').prop('checked')){
+					var xhr = new XMLHttpRequest();
+					xhr.open('post', 'userInfo/login.do');
+					xhr.setRequestHeader('Content-Type','application/json');
+					var o = {userName:$('#userName4').val(),password:$('#password4').val()};
+					xhr.send(JSON.stringify(o));
+				}else{
+					var o = {userName:$('#userName4').val(),password:$('#password4').val()};
+					$.ajax({
+						type:'post',
+						url:'userInfo/login.do',
+						data:JSON.stringify(o),
+						contentType:'application/json'
+					});
+				}
+			});
+		});
+	</script>
+</body>
+</html>
