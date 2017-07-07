@@ -1,5 +1,6 @@
 package proj.platform.listener;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import javax.servlet.ServletContext;
@@ -29,10 +30,17 @@ public class LoginListener implements ServletContextListener,
 		application.setAttribute("loginMap", loginMap);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void contextDestroyed(ServletContextEvent sce) {
-		
-
+		ServletContext application = sce.getServletContext();
+		loginMap = (Map<String, HttpSession>) application.getAttribute("loginMap");
+		Collection<HttpSession> sessions = loginMap.values();
+		for(HttpSession session:sessions){
+			if(session.getAttribute("userName")!=null){
+				session.removeAttribute("userName");
+			}
+		}
 	}
 
 	@Override
