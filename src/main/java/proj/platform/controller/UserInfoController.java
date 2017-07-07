@@ -16,7 +16,7 @@ import proj.platform.entity.UserInfo;
 import proj.platform.entity.UserLoginTime;
 import proj.platform.service.UserInfoService;
 import proj.platform.util.DataUtil;
-import proj.platform.util.State;
+import proj.platform.util.Status;
 
 @Controller
 @RequestMapping("/userInfo")
@@ -38,17 +38,23 @@ public class UserInfoController {
 		result = new Result();
 		ServletContext application = request.getServletContext(); 
 		Map<String, HttpSession> loginMap = (Map<String, HttpSession>) application.getAttribute("loginMap");
-		boolean isCorrect = userInfoService.login(userInfo);
-		if(isCorrect){
-			result.setStateCode(State.SUCCESS_CODE);
-			result.setDebugMsg("登录成功！");
-			HttpSession session = request.getSession();
-			session.setAttribute("userName", userInfo.getUserName());
-			session.setAttribute("loginTime", DataUtil.getCurrentDate("yyyy-MM-dd hh:mm:ss"));
-			loginMap.put(userInfo.getUserName(), session);
+		HttpSession session = request.getSession();
+		//当前会话已有用户登录
+		if(loginMap.containsValue(session)){
+			result.setStatus(Status.HAD_LOGINED);
+			result.setDebugMsg("当前会话已有用户登录！");
 		}else{
-			result.setStateCode(State.ERROR_CODE);
-			result.setDebugMsg("用户名或密码错误！");
+			boolean isCorrect = userInfoService.login(userInfo);
+			if(isCorrect){
+				result.setStatus(Status.SUCCESS);
+				result.setDebugMsg("登录成功！");
+				session.setAttribute("userName", userInfo.getUserName());
+				session.setAttribute("loginTime", DataUtil.getCurrentDate("yyyy-MM-dd HH:mm:ss"));
+				loginMap.put(userInfo.getUserName(), session);
+			}else{
+				result.setStatus(Status.ERROR);
+				result.setDebugMsg("用户名或密码错误！");
+			}
 		}
 		DataUtil.reply(response, result);
 	}
@@ -60,29 +66,30 @@ public class UserInfoController {
 		result = new Result();
 		UserInfo current = userInfoService.findByUserName(userInfo.getUserName());
 		if(current != null){
-			result.setStateCode(State.ERROR_CODE);
+			result.setStatus(Status.ERROR);
 			result.setDebugMsg("用户名已存在!");
 		}else{
 			userInfoService.add(userInfo);
-			result.setStateCode(State.SUCCESS_CODE);
+			result.setStatus(Status.SUCCESS);
 			result.setDebugMsg(userInfo.getUserName()+"注册成功！");
 		}
 		DataUtil.reply(response, result);
 	}
 	@SuppressWarnings("unchecked")
 	@RequestMapping("/logout.do")
-	public void logout(HttpServletRequest request, 
-			HttpServletResponse response,
-			String userName){
+	public String logout(HttpServletRequest request, 
+			HttpServletResponse response){
 		ServletContext application = request.getServletContext();
 		Map<String, HttpSession> loginMap = (Map<String, HttpSession>) application.getAttribute("loginMap");
-		loginMap.remove(userName);
 		HttpSession session = request.getSession();
-		session.invalidate();
+		loginMap.remove(session.getAttribute("userName"));
+//		session.invalidate();
+		session.removeAttribute("userName");
 		result = new Result();
-		result.setStateCode(State.SUCCESS_CODE);
+		result.setStatus(Status.SUCCESS);
 		result.setDebugMsg("注销成功！");
 		DataUtil.reply(response, result);
+		return "redirect:/login.html";
 	}
 	@RequestMapping("/getOnlineUsers.do")
 	public void getOnlineUsers(HttpServletRequest request,

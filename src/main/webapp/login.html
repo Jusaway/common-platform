@@ -3,10 +3,21 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Insert title here</title>
+	<style>
+		.login_div{
+		
+		}
+		.hidden{
+			display:none;
+		}
+		.info_div{
+		
+		}
+	</style>
 	<script src="static/js/jquery-3.2.1.min.js"></script>
 </head>
 <body>
-	<div>
+	<div class="login_div">
 		<div>
 			<label>用户</label>
 			<input type="text" name="userName" id="userName" />	
@@ -20,14 +31,23 @@
 			<button id="submit_jsp">登录(jsp)</button>
 		</div>
 	</div>
+	<div class="hidden info_div">
+		<span>当前会话已有用户登录!</span>
+		<span id="sec"></span>
+		<span>秒后跳转到首页！</span>
+	</div>
 	<script>
 		$(function(){
 			$('#submit_html').click(function(){
 				var userName = $('#userName').val();
 				var password = $('#password').val();
 				$.post('userInfo/login.do','userName='+userName+'&password='+password,function(data){
-					if(data.stateCode == 0){
+					if(data.status == 'SUCCESS'){
 						location.href = "index.html";
+					}else if(data.status == 'HAD_LOGINED'){
+						$('.login_div').addClass('hidden');
+						$('.info_div').removeClass('hidden');
+						showTime();
 					}
 				});
 			});
@@ -35,12 +55,21 @@
 				var userName = $('#userName').val();
 				var password = $('#password').val();
 				$.post('userInfo/login.do','userName='+userName+'&password='+password,function(data){
-					if(data.stateCode == 0){
+					if(data.status == 0){
 						location.href = "index.jsp";
 					}
 				});
 			});
 		});
+		var t = 5;
+		function showTime(){
+			document.getElementById('sec').innerHTML = t;
+			if(t == 0){
+				location.href = "index.html";
+			}
+			t--;
+			setTimeout('showTime()',1000);
+		}
 	</script>
 </body>
 </html>

@@ -17,10 +17,10 @@ public class StateInterceptor implements HandlerInterceptor {
 			return true;
 		}
 		HttpSession session = request.getSession();
-		if(session == null || session.getAttribute("userName") == null){
-			request.getRequestDispatcher("/WEB-INF/jsp/error.jsp").forward(request, response);
-		}else{
+		if(session != null && session.getAttribute("userName") != null){
 			return true;
+		}else{
+			request.getRequestDispatcher("/WEB-INF/jsp/error.jsp").forward(request, response);
 		}
 		return false;
 	}

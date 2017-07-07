@@ -22,7 +22,7 @@ import proj.platform.entity.NoticeSrchVal;
 import proj.platform.entity.Result;
 import proj.platform.service.NoticeService;
 import proj.platform.util.DataUtil;
-import proj.platform.util.State;
+import proj.platform.util.Status;
 
 @Controller
 @RequestMapping("/notice")
@@ -101,7 +101,7 @@ public class NoticeController {
 		result = new Result();
 		noticeService.updateList(ids, queryOrders);
 		
-		result.setStateCode(State.SUCCESS_CODE);
+		result.setStatus(Status.SUCCESS);
 		DataUtil.reply(response, result);
 	}	
 }

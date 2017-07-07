@@ -5,8 +5,10 @@ import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
+import proj.platform.util.Status;
+
 public class Result {
-	private Integer stateCode;
+	private Status status;
 	private String debugMsg;
 	private Notice notice;
 	private List<Notice> notices;
@@ -14,11 +16,11 @@ public class Result {
 	private List<UserInfo> userInfos;
 	private List<UserLoginTime> userLoginTimes;
 	
-	public Integer getStateCode() {
-		return stateCode;
+	public Status getStatus() {
+		return status;
 	}
-	public void setStateCode(Integer stateCode) {
-		this.stateCode = stateCode;
+	public void setStatus(Status status) {
+		this.status = status;
 	}
 	public String getDebugMsg() {
 		return debugMsg;
