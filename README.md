@@ -1,5 +1,5 @@
 # common-platform
-Java Web开发框架整合（Spring + Spring MVC + Hibernate + Shiro + Activiti），实现一个Java Web开发的通用平台（准确的说是一个Java Web所可能涉及功能的实现集合）
+Java Web开发框架整合（Spring + Spring MVC + Hibernate + Shiro + Activiti），实现一个Java Web开发的通用平台，包含Java Web开发所需的技术应用。
 ## 框架和库(20170621) 
 ### 掌握
 * 后端：Spring + Spring MVC + Hibernate/Mybatis + Shiro
