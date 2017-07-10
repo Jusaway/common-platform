@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import proj.platform.entity.Result;
@@ -62,6 +63,23 @@ public class UserInfoController {
 	public void register(HttpServletRequest request,
 			HttpServletResponse response,
 			UserInfo userInfo){
+		//假设前端已对密码前后两次密码判断通过
+		result = new Result();
+		UserInfo current = userInfoService.findByUserName(userInfo.getUserName());
+		if(current != null){
+			result.setStatus(Status.ERROR);
+			result.setDebugMsg("用户名已存在!");
+		}else{
+			userInfoService.add(userInfo);
+			result.setStatus(Status.SUCCESS);
+			result.setDebugMsg(userInfo.getUserName()+"注册成功！");
+		}
+		DataUtil.reply(response, result);
+	}
+	@RequestMapping("/registerWithJson.do")
+	public void registerWithJson(HttpServletRequest request,
+			HttpServletResponse response,
+			@RequestBody UserInfo userInfo){
 		//假设前端已对密码前后两次密码判断通过
 		result = new Result();
 		UserInfo current = userInfoService.findByUserName(userInfo.getUserName());

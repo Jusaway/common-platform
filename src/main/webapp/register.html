@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>注册页面</title>
+<style>
+p {
+	color: #f00;
+}
+</style>
+	<script src="static/js/jquery-3.2.1.min.js"></script>
+	<script src="static/js/angular.min.js"></script>
+</head>
+<body ng-app="signUpApp" ng-controller="signUpCtrl">
+	<div>
+		<form name="signUpForm" ng-submit="submitForm()">
+			<div>
+				<label>用户名</label> <input type="text" ng-model="userData.userName"
+					name="userName" ng-minlength="4" ng-maxlength="16" required />
+				<p
+					ng-if="signUpForm.userName.$touched 
+					&& signUpForm.userName.$error.required">用户名不能为空</p>
+				<p
+					ng-if="signUpForm.userName.$touched
+					&& (signUpForm.userName.$error.minlength
+					|| signUpForm.userName.$error.maxlength)">用户名长度在4-16个字符</p>
+			</div>
+			<div>
+				<label>输入密码</label> <input type="password"
+					ng-model="userData.password" name="password" ng-minlength="8"
+					ng-maxlength="255" required />
+				<p
+					ng-if="signUpForm.password.$touched
+				 && signUpForm.password.$error.required">密码不能为空</p>
+				<p
+					ng-if="signUpForm.password.$touched
+				 && (signUpForm.password.$error.minlength
+				 || signUpForm.password.$error.maxlength)">密码长度至少为8个字符</p>
+			</div>
+			<div>
+				<label>确认密码</label> <input type="password" ng-model="repassword"
+					name="repassword" ng-minlength="8" ng-maxlength="255"
+					pw-check="userData.password" required />
+				<p
+					ng-if="signUpForm.repassword.$touched
+				 && signUpForm.repassword.$error.required">确认密码不能为空</p>
+				<p
+					ng-if="signUpForm.repassword.$touched
+				 && signUpForm.repassword.$error.pwCheck">两次密码不一致</p>
+			</div>
+			<div>
+				<label>使用json提交表单</label><input type="checkbox" ng-model="isUseJson" />
+				<button id="register" ng-disabled="signUpForm.$invalid">注册</button>
+			</div>
+		</form>
+	</div>
+	<script>
+		var app = angular.module('signUpApp', []);
+		app.directive('pwCheck', function() {
+			var o = {};
+			o.strict = 'AE';
+			o.require = 'ngModel';
+			o.scope = {
+				pw : '=pwCheck'
+			};
+			o.link = function(scope, elem, attrs, con) {
+				con.$validators.pwCheck = function(v) {
+					return v == scope.pw;
+				};
+				scope.$watch('pw', function() {
+					con.$validate();
+				});
+			};
+			return o;
+		});
+		app.controller('signUpCtrl',
+			function($scope, $http) {
+				$scope.submitForm = function() {
+					var userData = $scope.userData;
+					if($scope.isUseJson == false){
+						$http.post('userInfo/register.do',userData,{
+							headers : {
+								'Content-Type' : 'application/x-www-form-urlencoded; charset=UTF-8'
+							},
+							transformRequest : function(userData){
+								return $.param(userData);
+							}
+						}).then(function(response) {
+							alert(response.data.status+'\n'+response.data.debugMsg);
+						});
+					}else{
+						//默认Content-type:application/json,jQuery默认的Content-type:application/x-www-form-urlencoded
+						$http.post('userInfo/registerWithJson.do',JSON.stringify(userData)).then(function(response){
+							alert(response.data.status+'\n'+response.data.debugMsg);
+						});
+					}
+			}
+		});
+	</script>
+</body>
+</html>
