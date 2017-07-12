@@ -77,7 +77,7 @@ public class DataUtil {
 		try {
 			result = URLEncoder.encode(source, "UTF-8");
 		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
+			return source;
 		}
 		return result;
 	}
@@ -93,7 +93,7 @@ public class DataUtil {
 		try {
 			result = URLDecoder.decode(url, "UTF-8");
 		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
+			return url;
 		}
 		return result;
 	}

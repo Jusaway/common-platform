@@ -9,14 +9,19 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.multipart.MultipartFile;
 
+import proj.platform.entity.FileMgr;
 import proj.platform.entity.Result;
 import proj.platform.entity.UserInfo;
+import proj.platform.entity.UserInfoDetail;
 import proj.platform.entity.UserLoginTime;
 import proj.platform.service.UserInfoService;
 import proj.platform.util.DataUtil;
+import proj.platform.util.FileMgrUtil;
 import proj.platform.util.Status;
 
 @Controller
@@ -24,6 +29,7 @@ import proj.platform.util.Status;
 public class UserInfoController {
 	@Resource(name = "userInfoService")
 	private UserInfoService userInfoService;
+	
 	private Result result;
 	/**
 	 * 登录
@@ -103,6 +109,7 @@ public class UserInfoController {
 		loginMap.remove(session.getAttribute("userName"));
 //		session.invalidate();
 		session.removeAttribute("userName");
+		session.removeAttribute("picId");
 		result = new Result();
 		result.setStatus(Status.SUCCESS);
 		result.setDebugMsg("注销成功！");
@@ -116,5 +123,59 @@ public class UserInfoController {
 		result = new Result();
 		result.setUserLoginTimes(userLoginTimes);
 		DataUtil.reply(response, result);
+	}
+	/**
+	 * 获得当期用户信息
+	 * @param request
+	 * @param response
+	 * @param session
+	 */
+	@RequestMapping("/getCurrentUserInfo.do")
+	public void getCurrentUserInfo(HttpServletRequest request,
+			HttpServletResponse response,
+			HttpSession session){
+		String userName = (String) session.getAttribute("userName");
+		UserInfo userInfo = userInfoService.findByUserName(userName);
+		result = new Result();
+		result.setUserInfo(userInfo);
+		DataUtil.reply(response, result);
+	}
+	/**
+	 * 获得文件信息
+	 * @param request
+	 * @param response
+	 */
+	@RequestMapping("/getFileMgr.do")
+	public void getFileMgr(HttpServletRequest request,
+			HttpServletResponse response,
+			HttpSession session){
+		FileMgr fileMgr = userInfoService.getFileMgr(session);
+		result = new Result();
+		result.setFileMgr(fileMgr);
+		DataUtil.reply(response, result);
+	}
+	@RequestMapping("/edit.do")
+	public void edit(HttpServletRequest request,
+			HttpServletResponse response, 
+			HttpSession session,
+			UserInfoDetail userInfoDetail,
+			MultipartFile file){
+		UserInfo userInfo = userInfoService.edit(session, userInfoDetail, file);
+		result = new Result();
+		result.setUserInfo(userInfo);
+		DataUtil.reply(response, result);
+	}
+	/**
+	 * 查看头像
+	 * @param request
+	 * @param response
+	 * @param fileId
+	 */
+	@RequestMapping("/pic/{fileId}")
+	public void getPic(HttpServletRequest request,
+			HttpServletResponse response,
+			HttpSession session,
+			@PathVariable("fileId") String fileId){
+		FileMgrUtil.download(response, fileId);
 	}
 }

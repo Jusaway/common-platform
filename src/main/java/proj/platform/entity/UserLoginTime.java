@@ -2,7 +2,6 @@ package proj.platform.entity;
 
 /**
  * 用户及其登录时间
- * @author Administrator
  *
  */
 public class UserLoginTime {

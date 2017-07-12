@@ -11,6 +11,8 @@ public class Result {
 	private Status status;
 	private String debugMsg;
 	private Notice notice;
+	private UserInfo userInfo;
+	private FileMgr fileMgr;
 	private List<Notice> notices;
 	private Map<String, HttpSession> loginMap; 
 	private List<UserInfo> userInfos;
@@ -33,6 +35,12 @@ public class Result {
 	}
 	public void setNotice(Notice notice) {
 		this.notice = notice;
+	}
+	public UserInfo getUserInfo() {
+		return userInfo;
+	}
+	public void setUserInfo(UserInfo userInfo) {
+		this.userInfo = userInfo;
 	}
 	public List<Notice> getNotices() {
 		return notices;
@@ -57,5 +65,11 @@ public class Result {
 	}
 	public void setUserLoginTimes(List<UserLoginTime> userLoginTimes) {
 		this.userLoginTimes = userLoginTimes;
+	}
+	public FileMgr getFileMgr() {
+		return fileMgr;
+	}
+	public void setFileMgr(FileMgr fileMgr) {
+		this.fileMgr = fileMgr;
 	}
 }

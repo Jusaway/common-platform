@@ -17,11 +17,9 @@ p {
 			<div>
 				<label>用户名</label> <input type="text" ng-model="userData.userName"
 					name="userName" ng-minlength="4" ng-maxlength="16" required />
-				<p
-					ng-if="signUpForm.userName.$touched 
+				<p ng-if="signUpForm.userName.$touched 
 					&& signUpForm.userName.$error.required">用户名不能为空</p>
-				<p
-					ng-if="signUpForm.userName.$touched
+				<p ng-if="signUpForm.userName.$touched
 					&& (signUpForm.userName.$error.minlength
 					|| signUpForm.userName.$error.maxlength)">用户名长度在4-16个字符</p>
 			</div>
@@ -29,11 +27,9 @@ p {
 				<label>输入密码</label> <input type="password"
 					ng-model="userData.password" name="password" ng-minlength="8"
 					ng-maxlength="255" required />
-				<p
-					ng-if="signUpForm.password.$touched
+				<p ng-if="signUpForm.password.$touched
 				 && signUpForm.password.$error.required">密码不能为空</p>
-				<p
-					ng-if="signUpForm.password.$touched
+				<p ng-if="signUpForm.password.$touched
 				 && (signUpForm.password.$error.minlength
 				 || signUpForm.password.$error.maxlength)">密码长度至少为8个字符</p>
 			</div>
@@ -41,11 +37,9 @@ p {
 				<label>确认密码</label> <input type="password" ng-model="repassword"
 					name="repassword" ng-minlength="8" ng-maxlength="255"
 					pw-check="userData.password" required />
-				<p
-					ng-if="signUpForm.repassword.$touched
+				<p ng-if="signUpForm.repassword.$touched
 				 && signUpForm.repassword.$error.required">确认密码不能为空</p>
-				<p
-					ng-if="signUpForm.repassword.$touched
+				<p ng-if="signUpForm.repassword.$touched
 				 && signUpForm.repassword.$error.pwCheck">两次密码不一致</p>
 			</div>
 			<div>

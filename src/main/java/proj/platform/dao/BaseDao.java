@@ -45,6 +45,9 @@ public class BaseDao<T> {
 	public void update(T entity){
 		getSession().update(entity);
 	}
+	public void saveOrUpdate(T entity){
+		getSession().saveOrUpdate(entity);
+	}
 	/**
 	 * 删除记录
 	 * @param entity

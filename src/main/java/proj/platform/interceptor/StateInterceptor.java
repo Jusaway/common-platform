@@ -13,10 +13,14 @@ public class StateInterceptor implements HandlerInterceptor {
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
 		String url = request.getRequestURL().toString();
+		HttpSession session = request.getSession();
 		if(url.indexOf("login.html")>0){
+			//已有用户登录，跳转到首页
+			if(session != null && session.getAttribute("userName") != null){
+				response.sendRedirect("index.html");
+			}
 			return true;
 		}
-		HttpSession session = request.getSession();
 		if(session != null && session.getAttribute("userName") != null){
 			return true;
 		}else{

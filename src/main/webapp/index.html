@@ -4,9 +4,16 @@
 	<meta charset="UTF-8">
 	<title>Insert title here</title>
 	<script src="static/js/jquery-3.2.1.min.js"></script>
+	<script src="static/js/angular.min.js"></script>
 </head>
-<body>
-	<h1><a href="userInfo/logout.do">注销</a></h1>
+<body ng-app="indexApp" ng-controller="indexCtrl">
+	<div>
+		<img ng-src="{{imgSrc}}" alt="无头像" width="200px" heigth="180px" />
+	</div>
+	<ul>
+		<li><a href="userInfo/logout.do">注销</a></li>
+		<li><a href="edit.html">编辑用户信息</a></li>
+	</ul>
 	<h2>当前登录的用户列表</h2>
 	<div id="myList"></div>
 	<script>
@@ -20,6 +27,17 @@
 					var loginTime = $('<span>'+list[i].loginTime+'</span>');
 					row.append(userName,sep,loginTime);
 					$('#myList').append(row);
+				}
+			});
+		})
+		var app = angular.module('indexApp',[]);
+		app.controller('indexCtrl',function($scope,$http){
+			$http.get('userInfo/getFileMgr.do').then(function(response){
+				var fileMgr = response.data.fileMgr;
+				if(fileMgr != null){
+					$scope.imgSrc = 'userInfo/pic/'+fileMgr.fileId;
+				}else{
+					$scope.imgSrc = 'static/img/default.jpg';
 				}
 			});
 		})

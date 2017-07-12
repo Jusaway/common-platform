@@ -40,6 +40,7 @@
 			<mvc:exclude-mapping path="/register.html" />
 			<mvc:exclude-mapping path="/static/**"/>
 			<mvc:exclude-mapping path="/userInfo/register*.do"/>
+			<mvc:exclude-mapping path="/test/**.do" />
 			<mvc:exclude-mapping path="/userInfo/login.do"/>
 			<bean class="proj.platform.interceptor.StateInterceptor" />
 		</mvc:interceptor>

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>编辑用户信息</title>
+	<script src="static/js/jquery-3.2.1.min.js"></script>
+	<script src="static/js/angular.min.js"></script>
+</head>
+<body ng-app="editApp" ng-controller="editCtrl">
+	<div>
+		<div>
+			<label>住址</label>
+			<input type="text" ng-model="detail.address" />
+		</div>
+		<div>
+			<label>电话号码</label>
+			<input type="text" ng-model="detail.phone" />
+		</div>
+		<div>
+			<label>邮箱</label>
+			<input type="email" ng-model="detail.email" />
+		</div>
+		<div>
+			<label>头像</label>
+			<img ng-src="{{imgSrc}}" alt="无头像" width="200px" width="180px" />
+			<input type="file" id="file"/>
+		</div>
+		<div>
+			<button ng-click="save()">保存</button>
+		</div>
+	</div>
+	<script>
+		var app = angular.module('editApp',[]);
+		app.controller('editCtrl',function($scope, $http){
+			$scope.detail = {};
+			$http.get('userInfo/getCurrentUserInfo.do').then(function(response){
+				var detail = response.data.userInfo.userInfoDetail;
+				if(detail != undefined){
+					$scope.detail.address = detail.address;
+					$scope.detail.phone = detail.phone;
+					$scope.detail.email = detail.email;
+				}
+			});
+			$http.get('userInfo/getFileMgr.do').then(function(response){
+				var fileMgr = response.data.fileMgr;
+				if(fileMgr != null){
+					$scope.imgSrc = 'userInfo/pic/'+fileMgr.fileId;
+				}else{
+					$scope.imgSrc = 'static/img/default.jpg';
+				}
+			});
+			$scope.save = function(){
+				var formData = new FormData();
+				formData.append('address',$scope.detail.address);
+				formData.append('phone',$scope.detail.phone);
+				formData.append('email',$scope.detail.email);
+				formData.append('file',document.querySelector('input[type=file]').files[0]);
+				$http({
+					method:'POST',
+					url:'userInfo/edit.do',
+					data:formData,
+					headers:{'Content-Type':undefined},
+					transformRequest:angular.identity
+				}).then(function(response){
+					alert('保存成功！');
+					location.href = "index.html";
+				},function(){
+					alert('操作失败！');
+				});
+			};
+		});
+		$(function(){
+			$('#file').on('change',function(){
+				var file = $('#file')[0].files[0];
+				$('')
+			})
+		})
+	</script>
+</body>
+</html>

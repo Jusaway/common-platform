@@ -11,7 +11,7 @@ import proj.platform.dao.BaseDao;
 import proj.platform.dao.NoticeDao;
 import proj.platform.entity.Notice;
 
-@Service
+@Service("noticeService")
 public class NoticeService {
 	@Resource(name = "noticeDao")
 	private NoticeDao noticeDao;
