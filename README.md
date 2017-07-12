@@ -14,6 +14,6 @@ Java Web开发框架整合（Spring + Spring MVC + Hibernate + Shiro + Activiti�
 * 登录用户列表的查看(Servlet Listener的使用)
 * 单用户登录涉及的问题解决
   
-## 用户详细信息和头像上传
+## 用户详细信息和头像上传(20170712)
 * 用户信息表、用户详细信息表、文件上传表一对一单向关联
 * AJAX请求页面无法跳转，即执行response.sendRedirect()无效果
