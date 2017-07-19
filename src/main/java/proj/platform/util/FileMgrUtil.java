@@ -1,9 +1,16 @@
 package proj.platform.util;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URL;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -107,6 +114,82 @@ public class FileMgrUtil {
                  }
             }
         }
-
+	}
+	/**
+	 * 压缩多个文件
+	 * @param destPath 目标文件路径
+	 * @param files 带压缩的文件
+	 */
+	public static void zipCompress(String destPath, File... files){
+		ZipOutputStream zipOut = null;
+		File destFile = new File(destPath);
+		try {
+			zipOut = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(destFile)));
+			for(File file:files){
+				zip(zipOut, file, file.getName());
+			}
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} finally{
+			if(zipOut != null){
+				try {
+					zipOut.close();
+				} catch (IOException e) {
+				}
+			}
+		}
+	}
+	/**
+	 * 压缩文件
+	 * @param out 压缩文件输出流
+	 * @param f 要压缩的文件
+	 * @param name 文件在压缩文件中的路径（相对压缩文件的路径）
+	 */
+	private static void zip(ZipOutputStream out, File f, String name){
+		if (f.isDirectory()){
+			File[] files = f.listFiles();
+			try {
+				if(files.length == 0){
+					out.putNextEntry(new ZipEntry(name + "/"));
+				}
+				for(File file:files){
+					//递归调用，保留目录结构
+					zip(out, file, name + "/" + file.getName());
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			
+		} else{
+			BufferedInputStream in = null;
+			try {
+				out.putNextEntry(new ZipEntry(name));
+				in = new BufferedInputStream(new FileInputStream(f));
+				int b;
+				while((b = in.read())!=-1){
+					out.write(b);
+				}
+				out.closeEntry();
+				in.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			} finally{
+				if(in != null){
+					try {
+						in.close();
+					} catch (IOException e) {
+					}
+				}
+			}
+		}
+	}
+	public static void main(String[] args) {
+		File file = new File("E:\\newDir");
+		File[] files = file.listFiles();
+		if(!file.exists()){
+			file.mkdirs();
+		}
+		zipCompress("E:\\newDir.zip", file);
+		zipCompress("E:\\mul.zip", files);
 	}
 }
