@@ -32,7 +32,7 @@
 	<script>
 		var app = angular.module('editApp',[]);
 		app.controller('editCtrl',function($scope, $http){
-			$scope.detail = {};
+			$scope.detail = {};//确保$scope.detail.address可以被识别到
 			$http.get('userInfo/getCurrentUserInfo.do').then(function(response){
 				var detail = response.data.userInfo.userInfoDetail;
 				if(detail != undefined){
