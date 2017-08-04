@@ -300,6 +300,11 @@
 			<artifactId>activiti-spring</artifactId>
 			<version>5.22.0</version>
 		</dependency>
+		<dependency>
+			<groupId>javax.mail</groupId>
+			<artifactId>javax.mail-api</artifactId>
+			<version>1.6.0</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<finalName>common-platform</finalName>
